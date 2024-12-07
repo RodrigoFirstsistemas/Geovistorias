@@ -20,7 +20,7 @@ class AdminService extends GetxService {
           .order('created_at', ascending: false);
 
       if (searchTerm != null && searchTerm.isNotEmpty) {
-        query = query.ilike('name', '%$searchTerm%');
+        query = query.ilike('name', '%${searchTerm}%');
       }
 
       if (limit != null) {

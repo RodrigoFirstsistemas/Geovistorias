@@ -26,8 +26,8 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    namespace "br.com.sistema_vistorias"
-    compileSdkVersion flutter.compileSdkVersion
+    namespace "com.firstsistemas.sistema_vistorias"
+    compileSdkVersion 33
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -44,11 +44,12 @@ android {
     }
 
     defaultConfig {
-        applicationId "br.com.sistema_vistorias"
-        minSdkVersion 21 // Stone SDK requer minSdkVersion 21
-        targetSdkVersion flutter.targetSdkVersion
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        applicationId "com.firstsistemas.sistema_vistorias"
+        minSdkVersion 21
+        targetSdkVersion 33
+        versionCode 1
+        versionName "1.0.0"
+        multiDexEnabled true
 
         // Stone SDK Credentials
         buildConfigField "String", "PACKAGECLOUD_TOKEN", "\"${localProperties.getProperty('packagecloud.token')}\""
@@ -58,6 +59,8 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.debug
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
@@ -68,6 +71,9 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.core:core-ktx:1.12.0'
     
     // Stone SDK
     implementation 'br.com.stone:stone-sdk:3.2.0'

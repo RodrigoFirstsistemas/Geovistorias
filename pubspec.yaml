@@ -39,11 +39,11 @@ dependencies:
   device_info_plus: ^9.1.1
   json_annotation: ^4.9.0
 
-  # SDKs dos Terminais
-  stone_sdk: ^1.0.0  # SDK da Stone
-  gertec_sdk: ^1.0.0  # SDK da Gertec
-  elgin_sdk: ^1.0.0  # SDK da Elgin
-  pax_sdk: ^1.0.0    # SDK da PAX
+  # SDKs dos Terminais (comentados para teste web)
+  # stone_sdk: ^1.0.0  # SDK da Stone
+  # gertec_sdk: ^1.0.0  # SDK da Gertec
+  # elgin_sdk: ^1.0.0  # SDK da Elgin
+  # pax_sdk: ^1.0.0    # SDK da PAX
 
 dev_dependencies:
   flutter_test:
