@@ -15,6 +15,11 @@ class AdminDashboardScreen extends StatelessWidget {
         title: Text('Dashboard Administrativo'),
         actions: [
           IconButton(
+            icon: Icon(Icons.smartphone),
+            onPressed: () => Get.toNamed('/admin/terminals'),
+            tooltip: 'Gerenciar Terminais',
+          ),
+          IconButton(
             icon: Icon(Icons.refresh),
             onPressed: () => adminController.loadInitialData(),
           ),

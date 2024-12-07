@@ -8,6 +8,9 @@ import '../screens/client_list_screen.dart';
 import '../screens/client_detail_screen.dart';
 import '../screens/settings_screen.dart';
 import '../screens/login_screen.dart';
+import '../screens/admin/admin_dashboard_screen.dart';
+import '../screens/admin/terminal_management_screen.dart';
+import '../middleware/admin_middleware.dart';
 
 class AppRoutes {
   static const initial = '/login';
@@ -19,6 +22,8 @@ class AppRoutes {
   static const clients = '/clients';
   static const clientDetail = '/client/:id';
   static const settings = '/settings';
+  static const adminDashboard = '/admin';
+  static const adminTerminals = '/admin/terminals';
 
   static final routes = [
     GetPage(
@@ -56,6 +61,16 @@ class AppRoutes {
     GetPage(
       name: settings,
       page: () => SettingsScreen(),
+    ),
+    GetPage(
+      name: adminDashboard,
+      page: () => AdminDashboardScreen(),
+      middlewares: [AdminMiddleware()],
+    ),
+    GetPage(
+      name: adminTerminals,
+      page: () => TerminalManagementScreen(),
+      middlewares: [AdminMiddleware()],
     ),
   ];
 }
