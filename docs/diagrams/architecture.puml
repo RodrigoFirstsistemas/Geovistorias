@@ -1,0 +1,55 @@
+@startuml
+skinparam monochrome true
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+
+package "Frontend" {
+  [Web Admin Panel] as WebAdmin
+  [Mobile App] as Mobile
+  [Terminal UI] as Terminal
+}
+
+package "Business Logic" {
+  [Inspection Service] as Inspection
+  [Payment Service] as Payment
+  [Terminal Service] as TerminalSvc
+  [Report Service] as Report
+  [Sync Service] as Sync
+}
+
+package "Data Layer" {
+  database "Local DB\n(Isar)" as LocalDB
+  database "Remote DB\n(Supabase)" as RemoteDB
+}
+
+package "Native SDKs" {
+  [Stone SDK] as Stone
+  [Gertec SDK] as Gertec
+  [Elgin SDK] as Elgin
+  [PAX SDK] as PAX
+}
+
+' Frontend connections
+WebAdmin --> Inspection
+WebAdmin --> Payment
+WebAdmin --> Report
+Mobile --> Inspection
+Mobile --> Payment
+Mobile --> TerminalSvc
+Terminal --> TerminalSvc
+Terminal --> Payment
+
+' Business Logic connections
+Inspection --> LocalDB
+Payment --> LocalDB
+Report --> LocalDB
+Sync --> LocalDB
+Sync --> RemoteDB
+
+' SDK connections
+Payment --> Stone
+TerminalSvc --> Gertec
+TerminalSvc --> Elgin
+TerminalSvc --> PAX
+
+@enduml

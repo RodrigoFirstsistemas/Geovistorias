@@ -1,0 +1,50 @@
+@startuml
+skinparam monochrome true
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+
+actor User
+participant "Mobile App" as App
+participant "Payment Service" as Payment
+participant "Terminal Service" as Terminal
+participant "Stone SDK" as Stone
+database "Local DB" as DB
+
+User -> App: Inicia pagamento
+activate App
+
+App -> Terminal: Verifica terminal
+activate Terminal
+Terminal --> App: Status do terminal
+deactivate Terminal
+
+App -> Payment: Processa pagamento
+activate Payment
+
+Payment -> Terminal: Prepara terminal
+activate Terminal
+Terminal -> Stone: Inicializa SDK
+Stone --> Terminal: SDK pronto
+Terminal --> Payment: Terminal pronto
+deactivate Terminal
+
+Payment -> Stone: Processa transação
+activate Stone
+Stone --> Payment: Transação aprovada
+deactivate Stone
+
+Payment -> Terminal: Imprime comprovante
+activate Terminal
+Terminal --> Payment: Impressão OK
+deactivate Terminal
+
+Payment -> DB: Salva transação
+DB --> Payment: Salvo
+
+Payment --> App: Pagamento concluído
+deactivate Payment
+
+App --> User: Exibe sucesso
+deactivate App
+
+@enduml

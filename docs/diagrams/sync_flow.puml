@@ -1,0 +1,62 @@
+@startuml
+skinparam monochrome true
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+
+box "Device" #LightGrey
+participant "App" as App
+participant "Sync Service" as Sync
+database "Local DB" as LocalDB
+end box
+
+box "Server" #LightGrey
+participant "API" as API
+database "Remote DB" as RemoteDB
+end box
+
+== Inicialização ==
+App -> Sync: Inicia sincronização
+activate Sync
+
+Sync -> LocalDB: Busca alterações
+activate LocalDB
+LocalDB --> Sync: Alterações pendentes
+deactivate LocalDB
+
+== Sincronização ==
+loop Para cada alteração
+    Sync -> API: Envia alteração
+    activate API
+    
+    API -> RemoteDB: Salva dados
+    activate RemoteDB
+    RemoteDB --> API: Salvo
+    deactivate RemoteDB
+    
+    API --> Sync: Confirmação
+    deactivate API
+    
+    Sync -> LocalDB: Marca como sincronizado
+end
+
+== Atualização ==
+Sync -> API: Busca atualizações
+activate API
+
+API -> RemoteDB: Busca alterações
+activate RemoteDB
+RemoteDB --> API: Novas alterações
+deactivate RemoteDB
+
+API --> Sync: Envia atualizações
+deactivate API
+
+Sync -> LocalDB: Salva atualizações
+activate LocalDB
+LocalDB --> Sync: Salvo
+deactivate LocalDB
+
+Sync --> App: Sincronização concluída
+deactivate Sync
+
+@enduml
