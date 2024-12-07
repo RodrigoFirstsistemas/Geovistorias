@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  get: ^4.6.6
+  get: ^4.6.5
   supabase_flutter: ^1.10.25
   isar: ^3.1.0+1
   isar_flutter_libs: ^3.1.0+1
@@ -39,14 +39,20 @@ dependencies:
   device_info_plus: ^9.1.1
   json_annotation: ^4.9.0
 
+  # SDKs dos Terminais
+  stone_sdk: ^1.0.0  # SDK da Stone
+  gertec_sdk: ^1.0.0  # SDK da Gertec
+  elgin_sdk: ^1.0.0  # SDK da Elgin
+  pax_sdk: ^1.0.0    # SDK da PAX
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.2
-  build_runner: ^2.4.8
+  flutter_lints: ^2.0.0
+  build_runner: ^2.4.6
   json_serializable: ^6.7.1
-  analyzer: ^5.13.0
   isar_generator: ^3.1.0+1
+  analyzer: ^5.13.0
   flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.3.6
 
