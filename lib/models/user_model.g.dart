@@ -22,6 +22,9 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
           ? null
           : DateTime.parse(json['lastLoginAt'] as String),
       needsSync: json['needsSync'] as bool? ?? true,
+      lastSyncAt: json['lastSyncAt'] == null
+          ? null
+          : DateTime.parse(json['lastSyncAt'] as String),
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
@@ -36,6 +39,7 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'createdAt': instance.createdAt.toIso8601String(),
       'lastLoginAt': instance.lastLoginAt?.toIso8601String(),
       'needsSync': instance.needsSync,
+      'lastSyncAt': instance.lastSyncAt?.toIso8601String(),
     };
 
 const _$UserRoleEnumMap = {

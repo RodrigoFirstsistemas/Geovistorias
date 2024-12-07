@@ -33,7 +33,7 @@ class UserModel {
   final bool needsSync;
   final DateTime? lastSyncAt;
 
-  UserModel({
+  const UserModel({
     required this.id,
     required this.name,
     required this.email,
@@ -45,6 +45,7 @@ class UserModel {
     DateTime? createdAt,
     this.lastLoginAt,
     this.needsSync = true,
+    this.lastSyncAt,
   }) : createdAt = createdAt ?? DateTime.now();
 
   factory UserModel.fromJson(Map<String, dynamic> json) => 
@@ -55,4 +56,41 @@ class UserModel {
   bool get isAdmin => role == UserRole.admin;
   bool get isManager => role == UserRole.manager;
   bool get isOperator => role == UserRole.operator;
+
+  bool hasPermission(UserRole minimumRole) {
+    final roleValues = UserRole.values;
+    final currentRoleIndex = roleValues.indexOf(role);
+    final minimumRoleIndex = roleValues.indexOf(minimumRole);
+    return currentRoleIndex <= minimumRoleIndex;
+  }
+
+  UserModel copyWith({
+    String? id,
+    String? name,
+    String? email,
+    String? avatarUrl,
+    String? phone,
+    UserRole? role,
+    String? organizationId,
+    bool? isActive,
+    DateTime? createdAt,
+    DateTime? lastLoginAt,
+    bool? needsSync,
+    DateTime? lastSyncAt,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      phone: phone ?? this.phone,
+      role: role ?? this.role,
+      organizationId: organizationId ?? this.organizationId,
+      isActive: isActive ?? this.isActive,
+      createdAt: createdAt ?? this.createdAt,
+      lastLoginAt: lastLoginAt ?? this.lastLoginAt,
+      needsSync: needsSync ?? this.needsSync,
+      lastSyncAt: lastSyncAt ?? this.lastSyncAt,
+    );
+  }
 }

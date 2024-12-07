@@ -1,6 +1,10 @@
 import 'package:isar/isar.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-@collection
+part 'budget_model.g.dart';
+
+@JsonSerializable()
+@Collection()
 class Budget {
   Id id = Isar.autoIncrement;
   
@@ -46,6 +50,33 @@ class Budget {
   })  : createdAt = DateTime.now(),
         remainingAmount = totalAmount;
 
+  factory Budget.fromJson(Map<String, dynamic> json) => _$BudgetFromJson(json);
+  Map<String, dynamic> toJson() => _$BudgetToJson(this);
+
+  factory Budget.create({
+    required String clientId,
+    required String propertyId,
+    required String inspectionId,
+    required double totalAmount,
+    required String description,
+    required List<BudgetItem> items,
+  }) {
+    final now = DateTime.now();
+    return Budget(
+      clientId: clientId,
+      propertyId: propertyId,
+      inspectionId: inspectionId,
+      totalAmount: totalAmount,
+      description: description,
+      items: items,
+      paymentOrders: [],
+      paidAmount: 0,
+      createdAt: now,
+      updatedAt: now,
+      needsSync: true,
+    );
+  }
+
   // Métodos de negócio
   void approve(String approver) {
     status = BudgetStatus.approved;
@@ -76,6 +107,7 @@ class Budget {
     }
 
     final paymentOrder = PaymentOrder(
+      id: '',
       budgetId: remoteId!,
       amount: amount,
       method: method,
@@ -94,49 +126,63 @@ class Budget {
   void confirmPayment(String paymentOrderId) {
     final paymentOrder = paymentOrders.firstWhere((p) => p.id == paymentOrderId);
     paymentOrder.confirm();
-    paidAmount += paymentOrder.amount;
+    paidAmount += paymentOrder.amount!;
     updatedAt = DateTime.now();
     needsSync = true;
   }
 }
 
+@JsonSerializable()
 @embedded
 class BudgetItem {
-  String description;
-  int quantity;
-  double unitPrice;
-  double totalPrice;
+  String? description;
+  int? quantity;
+  double? unitPrice;
+  late double totalPrice;
 
   BudgetItem({
-    required this.description,
-    required this.quantity,
-    required this.unitPrice,
-  }) : totalPrice = quantity * unitPrice;
+    this.description,
+    this.quantity,
+    this.unitPrice,
+  }) {
+    totalPrice = (quantity ?? 0) * (unitPrice ?? 0);
+  }
+
+  factory BudgetItem.fromJson(Map<String, dynamic> json) => _$BudgetItemFromJson(json);
+  Map<String, dynamic> toJson() => _$BudgetItemToJson(this);
 }
 
+@JsonSerializable()
 @embedded
 class PaymentOrder {
   String id;
-  String budgetId;
-  double amount;
-  String method;
-  DateTime dueDate;
+  String? budgetId;
+  double? amount;
+  String? method;
+  DateTime? dueDate;
   DateTime? paidAt;
   
   @Enumerated(EnumType.name)
-  PaymentStatus status;
+  PaymentStatus? status;
   
   String? transactionId;
   String? receipt;
 
   PaymentOrder({
-    String? id,
-    required this.budgetId,
-    required this.amount,
-    required this.method,
-    required this.dueDate,
-    required this.status,
-  }) : id = id ?? DateTime.now().millisecondsSinceEpoch.toString();
+    this.id = '',
+    this.budgetId,
+    this.amount,
+    this.method,
+    this.dueDate,
+    this.status,
+  }) {
+    if (id.isEmpty) {
+      id = DateTime.now().millisecondsSinceEpoch.toString();
+    }
+  }
+
+  factory PaymentOrder.fromJson(Map<String, dynamic> json) => _$PaymentOrderFromJson(json);
+  Map<String, dynamic> toJson() => _$PaymentOrderToJson(this);
 
   void confirm({String? transactionId, String? receipt}) {
     status = PaymentStatus.paid;
@@ -146,14 +192,22 @@ class PaymentOrder {
   }
 }
 
+@JsonEnum()
 enum BudgetStatus {
+  @JsonValue('pending')
   pending,
+  @JsonValue('approved')
   approved,
+  @JsonValue('rejected')
   rejected,
 }
 
+@JsonEnum()
 enum PaymentStatus {
+  @JsonValue('pending')
   pending,
+  @JsonValue('paid')
   paid,
+  @JsonValue('cancelled')
   cancelled,
 }
